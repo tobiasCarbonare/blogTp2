@@ -1,0 +1,18 @@
+guia paso a paso del proyecto
+1) inicializar el proyecto el package.json en consola con: npm init -y
+
+//dependencias
+express: npm install express
+sequelize y mysql: npm install sequelize mysql2
+nodemon: npm install nodemon
+
+2) en el package.json modificar el type a "module"
+
+3)crear estructura de archivos:
+src
+    controllers
+    routes
+    models
+    database
+    app.js
+    index.js
