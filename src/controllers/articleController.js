@@ -6,9 +6,7 @@ export const getAllArticles = async (req, res) => {
     try {
         const articles = await ArticleService.getAllArticles();
         res.json(articles);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener los articulos', error: error.message });
-    }
+    } catch (e) { res.status(500).json({ error: e.message }); }
 };
 
 // --- OBTENER POR ID ---
@@ -29,14 +27,13 @@ export const getArticleById = async (req, res) => {
 
 // --- CREAR ---
 export const createArticle = async (req, res) => {
-    const { title, description, userId } = req.body;
+    const { title, description } = req.body;
+    const userId = req.user.id; // ¡ID obtenido del token automáticamente!
+    
     try {
-        // Pasamos los datos limpios al servicio
         const newArticle = await ArticleService.createArticle({ title, description, userId });
         res.status(201).json(newArticle);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al crear el articulo', error: error.message });
-    }
+    } catch (e) { res.status(500).json({ error: e.message }); }
 };
 
 // --- ACTUALIZAR ---

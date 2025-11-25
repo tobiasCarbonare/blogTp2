@@ -1,8 +1,9 @@
 // 4) levantar servidor con express
+
 import express from 'express';
 // 24) importamos las rutas
 import { routerArticle } from './routes/articleRoute.js';
-import { routerUser } from './routes/userRoute.js';
+import routerUser from './routes/userRoute.js';
 
 export const app = express();
 // 25) usamos express.json para que el servidor pueda recibir datos en formato json

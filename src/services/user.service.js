@@ -1,43 +1,43 @@
 // services/user.service.js
 import { User } from '../models/user.js';
+import bcrypt from 'bcrypt';
 
-// --- OBTENER TODOS ---
-export const getAllUsers = async () => {
-    return await User.findAll();
-};
+export const getAllUsers = async () => await User.findAll();
 
-// --- OBTENER POR ID ---
-export const getUserById = async (id) => {
-    return await User.findByPk(id);
-};
+export const getUserById = async (id) => await User.findByPk(id);
 
-// --- CREAR ---
 export const createUser = async (data) => {
-    // data es un objeto { nombre, email, password }
+    const salt = await bcrypt.genSalt(10);
+    data.password = await bcrypt.hash(data.password, salt); // Encriptamos
     return await User.create(data);
 };
 
-// --- ACTUALIZAR ---
+export const login = async (email, password) => {
+    const user = await User.findOne({ where: { email } });
+    if (!user) return null;
+    
+    const isMatch = await bcrypt.compare(password, user.password); // Comparamos
+    return isMatch ? user : null;
+};
+
 export const updateUser = async (id, data) => {
     const user = await User.findByPk(id);
+    if (!user) return null;
     
-    if (!user) return null; // No encontrado
-
-    // Actualizamos las propiedades
-    user.nombre = data.nombre;
-    user.email = data.email;
-    user.password = data.password;
-
-    await user.save();
-    return user; // Devolvemos el usuario actualizado
+    // Si envían password nuevo, hay que encriptarlo de nuevo
+    if(data.password) {
+        const salt = await bcrypt.genSalt(10);
+        data.password = await bcrypt.hash(data.password, salt);
+    }
+    
+    return await user.update(data);
 };
 
-// --- ELIMINAR ---
+// borrar mi usuario
 export const deleteUser = async (id) => {
     const user = await User.findByPk(id);
-    
-    if (!user) return null; // No encontrado
+    if (!user) return null; // Indicamos que no se encontró
 
     await user.destroy();
-    return true; // Retornamos true para indicar éxito
-};
+    return true; // Indicamos éxito
+}

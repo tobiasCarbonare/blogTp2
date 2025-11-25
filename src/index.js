@@ -1,4 +1,5 @@
 // 5) importamos app
+import 'dotenv/config'
 import { app } from './app.js';
 //8) importamos la conexion a la base de datos
 import { sequelize } from './database/conexionDB.js';
