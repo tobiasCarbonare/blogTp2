@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
     login, createUser, getAllUsers, // <-- Importado del controller (Correcto)
     getProfile, updateProfile, deleteUser 
-} from '../controllers/usercontroller.js';
+} from '../controllers/userController.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 
 const router = Router();

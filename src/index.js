@@ -12,7 +12,7 @@ async function main() {
         console.log('✅ Base de datos conectada');
 
         // 2. Levantamos el servidor
-        const PORT = process.env.PORT || 3000;
+        const PORT = process.env.PORT;
         app.listen(PORT, () => {
             console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
         });
