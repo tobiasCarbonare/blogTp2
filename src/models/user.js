@@ -29,3 +29,7 @@ User.init(
 
     }
 );
+//resumen
+// Este archivo define el modelo "User" utilizando Sequelize.
+// El modelo tiene cuatro atributos: id, nombre, email y password.
+// Se vincula con la tabla "users" en la base de datos y no utiliza timestamps.

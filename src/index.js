@@ -1,30 +1,26 @@
-// 5) importamos app
-import 'dotenv/config'
+import 'dotenv/config';
 import { app } from './app.js';
-//8) importamos la conexion a la base de datos
 import { sequelize } from './database/conexionDB.js';
-// 15) importamos los modelos
-import { Article } from './models/article.js';
-import { User } from './models/user.js';
-//30) importamos las asociaciones
-import './models/asosiations.js';   
-// 25) aumentar el limite de oyentes permitidos
-import { EventEmitter } from 'events';
-// Aumentamos el límite a 20 (o más si es necesario) para evitar la advertencia
-EventEmitter.defaultMaxListeners = 20;
-// 6) levantar el servidor  
-//9) hacemos asincrona la funcion main, la forzamos a sincronizar la base de datos sin perder datos e imprimimos mensajes en consola
+import './models/asosiations.js'; // Carga modelos y relaciones automáticamente
+
 async function main() {
-    await sequelize.sync({force: false}).then(() => {
-        console.log("Base de datos conectada");
-    }).catch((error) => {
-        console.log("Error al conectar la base de datos: ", error);
-    }   );
-    const PORT = 3000;  
-    app.listen(PORT, () => {
-        console.log(`Servidor escuchando en el puerto ${PORT}`);
-    });
+    try {
+        // 1. Sincronizamos la Base de Datos
+        // await detiene la ejecución aquí hasta que la DB responda.
+        // Si falla, salta directamente al catch.
+        await sequelize.sync({ force: false });
+        console.log('✅ Base de datos conectada');
+
+        // 2. Levantamos el servidor
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
+        });
+
+    } catch (error) {
+        // 3. Manejo centralizado de errores de inicio
+        console.error('❌ Error fatal al iniciar la aplicación:', error.message);
+    }
 }
+
 main();
-//10) creamos la base de datos en phpmyadmin llamada blogdb
-//11) construir los modelos de datos en la carpeta models

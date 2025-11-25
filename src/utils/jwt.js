@@ -1,27 +1,10 @@
 import jwt from 'jsonwebtoken';
 
-// BORRA O COMENTA ESTAS LÍNEAS QUE TIENES AL PRINCIPIO:
-// const SECRET_KEY = process.env.JWT_SECRET; 
-// if (!SECRET_KEY) throw new Error(...) 
+// Usamos arrow functions con retorno implícito.
+// Accedemos a process.env directo en la función para mantener el "Lazy Loading" seguro.
 
-export const generateToken = (payload) => {
-    // LEEMOS LA CLAVE AQUÍ ADENTRO (Lazy Loading)
-    // Así damos tiempo a que dotenv cargue primero
-    const SECRET = process.env.JWT_SECRET;
-    
-    if (!SECRET) {
-        throw new Error('No se encontró JWT_SECRET en el archivo .env');
-    }
+export const generateToken = (payload) => 
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    return jwt.sign(payload, SECRET, { expiresIn: '1h' });
-};
-
-export const verifyToken = (token) => {
-    const SECRET = process.env.JWT_SECRET;
-    
-    if (!SECRET) {
-        throw new Error('No se encontró JWT_SECRET en el archivo .env');
-    }
-
-    return jwt.verify(token, SECRET);
-};
+export const verifyToken = (token) => 
+    jwt.verify(token, process.env.JWT_SECRET);

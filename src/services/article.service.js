@@ -2,38 +2,25 @@
 import { Article } from '../models/article.js';
 import { User } from '../models/user.js';
 
-export const getAllArticles = async () => {
-    // Retorna la promesa directamente
-    return await Article.findAll({
-        include: { model: User, attributes: ['id', 'nombre'] }
-    });
-};
+// 1. Arrow functions de una línea (Return implícito)
+export const getAllArticles = async () => await Article.findAll({
+    include: { model: User, attributes: ['id', 'nombre'] }
+});
 
-export const getArticleById = async (id) => {
-    return await Article.findByPk(id);
-};
+export const getArticleById = async (id) => await Article.findByPk(id);
 
-export const createArticle = async (data) => {
-    // data es un objeto { title, description, userId }
-    return await Article.create(data);
-};
+export const createArticle = async (data) => await Article.create(data);
 
+// 2. Simplificación con Operador Ternario y método .update()
 export const updateArticle = async (id, data) => {
     const article = await Article.findByPk(id);
-    if (!article) return null; // Indicamos que no se encontró
-
-    // Actualizamos campos
-    article.title = data.title;
-    article.description = data.description;
-    
-    await article.save();
-    return article;
+    // Si existe, actualiza automágicamente con los datos y devuelve el objeto. Si no, null.
+    return article ? await article.update(data) : null;
 };
 
+// 3. Optimización: destroy directo (Ahorra una consulta a la BD)
 export const deleteArticle = async (id) => {
-    const article = await Article.findByPk(id);
-    if (!article) return null; // Indicamos que no se encontró
-
-    await article.destroy();
-    return true; // Indicamos éxito
+    // 'destroy' devuelve la cantidad de filas borradas (0 o 1)
+    const rowsDeleted = await Article.destroy({ where: { id } });
+    return rowsDeleted > 0; // Retorna true si borró algo, false si no existía.
 };

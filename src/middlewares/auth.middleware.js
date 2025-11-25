@@ -15,3 +15,7 @@ export const authenticate = (req, res, next) => {
         return res.status(403).json({ message: 'Token inválido o expirado' });
     }
 };
+//resumen
+// Este middleware verifica la autenticidad del token JWT en las solicitudes entrantes.
+// Si el token es válido, agrega los datos del usuario a la solicitud (req.user) y permite que la solicitud continúe.
+// Si el token es inválido o no está presente, responde con un error 401 o 403.

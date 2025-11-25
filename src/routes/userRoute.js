@@ -1,19 +1,23 @@
 import { Router } from 'express';
-import { login, createUser, getProfile, updateProfile,deleteUser } from '../controllers/usercontroller.js';
+import { 
+    login, createUser, getAllUsers, // <-- Importado del controller (Correcto)
+    getProfile, updateProfile, deleteUser 
+} from '../controllers/usercontroller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
-import {  getAllUsers } from '../services/user.service.js';
 
 const router = Router();
 
-// Públicas
+// --- RUTAS PÚBLICAS ---
 router.post('/login', login);
-router.post('/', createUser); // Registro
-router.get('/', getAllUsers); // Obtener todos los usuarios (para pruebas)
+router.post('/', createUser);
+router.get('/', getAllUsers);
 
-// Privadas (Requieren Token)
-router.get('/me', authenticate, getProfile);   // Ver mi perfil
-router.put('/me', authenticate, updateProfile); // Editar mi perfil
-//router.delete('/:id', authenticate, deleteUser); // Eliminar usuario (opcional)
-router.delete('/me',authenticate,deleteUser); // Eliminar usuario (opcional)
+// --- RUTAS PRIVADAS (Perfil del Usuario) ---
+// Simplificación: Agrupamos todas las rutas '/me'
+router.route('/me')
+    .all(authenticate)        // 1. Aplica seguridad a todas
+    .get(getProfile)          // 2. Ver
+    .put(updateProfile)       // 3. Editar
+    .delete(deleteUser);      // 4. Eliminar
 
 export default router;

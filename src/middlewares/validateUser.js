@@ -22,3 +22,7 @@ export const validateUserBody = (req, res, next) => {
     // Si todo está bien, pasa al siguiente paso (el controlador)
     next();
 };
+//resumen
+// Este middleware valida que el cuerpo de la solicitud para crear o actualizar un usuario
+// contenga los campos obligatorios (nombre, email, password) y que cumplan con ciertos criterios básicos.
+// Si la validación falla, responde con un error 400; de lo contrario, permite que la solicitud continúe.

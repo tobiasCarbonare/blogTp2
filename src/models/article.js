@@ -26,3 +26,7 @@ Article.init(
 
     }
 );
+//resumen
+// Este archivo define el modelo "Article" utilizando Sequelize.
+// El modelo tiene tres atributos: id, title y description.
+// Se vincula con la tabla "articles" en la base de datos y no utiliza timestamps.

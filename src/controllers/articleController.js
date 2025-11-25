@@ -6,66 +6,47 @@ export const getAllArticles = async (req, res) => {
     try {
         const articles = await ArticleService.getAllArticles();
         res.json(articles);
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) { handleError(res, e); }
 };
 
 // --- OBTENER POR ID ---
 export const getArticleById = async (req, res) => {
-    const { id } = req.params;
     try {
-        const article = await ArticleService.getArticleById(id);
-        
-        if (article) {
-            res.json(article);
-        } else {
-            res.status(404).json({ message: 'Articulo no encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener el articulo', error: error.message });
-    }
+        const article = await ArticleService.getArticleById(req.params.id);
+        // Simplificación: Si existe devuelve json, SINO (:) devuelve 404
+        article ? res.json(article) : res.status(404).json({ message: 'No encontrado' });
+    } catch (e) { handleError(res, e); }
 };
 
 // --- CREAR ---
 export const createArticle = async (req, res) => {
-    const { title, description } = req.body;
-    const userId = req.user.id; // ¡ID obtenido del token automáticamente!
-    
     try {
-        const newArticle = await ArticleService.createArticle({ title, description, userId });
+        // req.user.id viene del middleware (Token)
+        const newArticle = await ArticleService.createArticle({ 
+            ...req.body, 
+            userId: req.user.id 
+        });
         res.status(201).json(newArticle);
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) { handleError(res, e); }
 };
 
 // --- ACTUALIZAR ---
 export const updateArticle = async (req, res) => {
-    const { id } = req.params;
-    const { title, description } = req.body;
-    
     try {
-        const updatedArticle = await ArticleService.updateArticle(id, { title, description });
-        
-        if (updatedArticle) {
-            res.json(updatedArticle);
-        } else {
-            res.status(404).json({ message: 'Articulo no encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: 'Error al actualizar el articulo', error: error.message });
-    }
+        const updated = await ArticleService.updateArticle(req.params.id, req.body);
+        updated ? res.json(updated) : res.status(404).json({ message: 'No encontrado' });
+    } catch (e) { handleError(res, e); }
 };
 
 // --- ELIMINAR ---
 export const deleteArticle = async (req, res) => {
-    const { id } = req.params;
     try {
-        const result = await ArticleService.deleteArticle(id);
-        
-        if (result) {
-            res.json({ message: 'Articulo eliminado correctamente' });
-        } else {
-            res.status(404).json({ message: 'Articulo no encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar el articulo', error: error.message });
-    }
+        const result = await ArticleService.deleteArticle(req.params.id);
+        result ? res.json({ message: 'Eliminado' }) : res.status(404).json({ message: 'No encontrado' });
+    } catch (e) { handleError(res, e); }
+};
+
+// --- HELPER PARA ERRORES (Función auxiliar privada) ---
+const handleError = (res, error) => {
+    res.status(500).json({ message: 'Error del servidor', error: error.message });
 };
