@@ -1,6 +1,6 @@
 // 7) creamos la conexion a la base de datos
 import { Sequelize } from 'sequelize';
-export const sequelize = new Sequelize("blog", "root", "", { 
+export const sequelize = new Sequelize(process.env.NAME_DB, "root", process.env.PASSWORD_DB, { 
     host: "localhost",
     dialect: "mysql"
 }

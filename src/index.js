@@ -20,6 +20,7 @@ async function main() {
     } catch (error) {
         // 3. Manejo centralizado de errores de inicio
         console.error('❌ Error fatal al iniciar la aplicación:', error.message);
+        console.error(error);
     }
 }
 
